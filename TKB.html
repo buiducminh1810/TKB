@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Trình Ôn Thi 2026</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; text-align: center; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        #clock { font-size: 1.5em; font-weight: bold; color: #3498db; margin-bottom: 10px; }
+        .task-card { background: #e8f4fd; border-left: 5px solid #3498db; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .task-now { font-size: 1.2em; font-weight: bold; color: #e67e22; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #3498db; color: white; }
+        .busy { background: #ffebee; color: #c62828; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎯 LỊCH TRÌNH ÔN THI 2026</h2>
+    <div id="clock">00:00:00</div>
+    
+    <div class="task-card">
+        <div>Nhiệm vụ hiện tại:</div>
+        <div id="current-task" class="task-now">Đang tải...</div>
+    </div>
+
+    <h3>📅 Lịch Cố Định & Học Thêm</h3>
+    <table>
+        <tr><th>Thứ</th><th>Sáng (7h-12h)</th><th>Tối (Sau 18h)</th></tr>
+        <tr><td>T2, 4, CN</td><td class="busy">Trường</td><td class="busy">Học thêm (18h-21h30)</td></tr>
+        <tr><td>T3, 5, T7</td><td class="busy">Trường</td><td>Tự học ĐGNL</td></tr>
+        <tr><td>T6</td><td class="busy">Trường</td><td class="busy">Học thêm (19h-21h30)</td></tr>
+    </table>
+</div>
+
+<script>
+    function updateSchedule() {
+        const now = new Date();
+        const day = now.getDay(); // 0: CN, 1: T2...
+        const hour = now.getHours();
+        const min = now.getMinutes();
+        const currentTime = hour + min/60;
+        
+        let task = "";
+
+        // Logic kiểm tra lịch trình
+        if (currentTime >= 23.5 || currentTime < 6) {
+            task = "😴 Ngủ để phục hồi não bộ (Bắt buộc)";
+        } else if (currentTime >= 6 && currentTime < 7) {
+            task = "🌅 Vệ sinh, ăn sáng & Chuẩn bị bài";
+        } else if (currentTime >= 7 && currentTime < 12 && day !== 0) {
+            task = "🏫 Học tại trường (Tập trung kiến thức Tốt nghiệp)";
+        } else if (currentTime >= 12 && currentTime < 13.5) {
+            task = "🍱 Ăn trưa & Ngủ trưa (30 phút)";
+        } else if (currentTime >= 13.5 && currentTime < 16.5) {
+            task = "📖 Tự học Ca chiều: Ôn chuyên đề Tốt nghiệp THPT";
+        } else if (currentTime >= 16.5 && currentTime < 18) {
+            task = "🏃 Thể dục & Ăn tối (Xả stress)";
+        } else {
+            // Kiểm tra lịch học thêm buổi tối
+            let isBusyExtra = false;
+            if ((day === 1 || day === 3 || day === 0) && (currentTime >= 18 && currentTime < 21.5)) isBusyExtra = true;
+            if (day === 5 && (currentTime >= 19 && currentTime < 21.5)) isBusyExtra = true;
+
+            if (isBusyExtra) {
+                task = "📚 Đang trong giờ Học thêm. Cố gắng lên!";
+            } else if (currentTime >= 21.5 && currentTime < 22) {
+                task = "☕ Nghỉ ngơi nhẹ / Ăn đêm";
+            } else if (currentTime >= 22 && currentTime < 23.5) {
+                task = "🎯 GIAI ĐOẠN VÀNG: Luyện đề ĐGNL hoặc Tư duy logic";
+            } else {
+                task = "⏳ Thời gian trống: Xem lại từ vựng hoặc công thức ngắn";
+            }
+        }
+
+        document.getElementById('current-task').innerText = task;
+        document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
+    }
+
+    setInterval(updateSchedule, 1000);
+    updateSchedule();
+</script>
+
+</body>
+</html>
